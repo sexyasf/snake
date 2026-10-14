@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game 2d</title>
+    <style>
+      .board {
+        position: relative;
+        background-image: url("images/meth.avif");
+        background-size: cover;
+      }
+
+      .game {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .player,
+      .star {
+        width: 10px;
+        height: 10px;
+        /* background-color: black; */
+        border-radius: 50%;
+        position: absolute;
+        font-size: 6px;
+        text-align: center;
+      }
+
+      .centered-img {
+        max-width: 8px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body class="game">
+    <div id="score">Score: 0</div>
+    <div id="timer">Time: 20</div>
+    <div class="board" id="board">
+      <div id="player" class="player">
+        <img src="images/walter_white.gif" class="centered-img" alt="example" />
+      </div>
+      <div id="star" class="star">💵</div>
+    </div>
+    <!-- <button onclick="moveUp()">Top</button>
+    <button onclick="moveDown()">Bottom</button>
+    <button onclick="moveLeft()">Left</button>
+    <button onclick="moveRight()">Right</button> -->
+
+    <script>
+      let direction = "ArrowRight";
+
+      let score = 0;
+
+      let timer = 20;
+
+      let playerX = 10;
+      let playerY = 20;
+
+      let starX = 50;
+      let starY = 60;
+
+      const timerEl = document.getElementById("timer");
+
+      setInterval(function () {
+        timer--;
+        timerEl.textContent = timer;
+        if (timer === 0) {
+          alert(`Is this really the best you can do? ${score}`);
+          timer = 10;
+          score = 0;
+          location.reload();
+        }
+      }, 1000);
+
+      const boardHeight = 200;
+      const boardWidth = 250;
+
+      const playerEl = document.getElementById("player");
+      const starEl = document.getElementById("star");
+      const boardEl = document.getElementById("board");
+
+      boardEl.style.width = `${boardWidth}px `;
+      boardEl.style.height = `${boardHeight}px`;
+
+      draw();
+
+      function moveUp() {
+        playerY = playerY - 10;
+        if (playerY < 0) {
+          playerY = boardHeight - 10;
+        }
+        draw();
+      }
+
+      function moveDown() {
+        playerY = playerY + 10;
+        if (playerY > boardHeight - 10) {
+          playerY = 0;
+        }
+        draw();
+      }
+
+      function moveRight() {
+        playerX = playerX + 10;
+        if (playerX > boardWidth - 10) {
+          playerX = 0;
+        }
+        draw();
+      }
+
+      function moveLeft() {
+        playerX = playerX - 10;
+        if (playerX < 0) {
+          playerX = boardWidth - 10;
+        }
+        draw();
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.code == "ArrowUp") {
+          changeDir("ArrowUp");
+        } else if (event.code == "ArrowDown") {
+          changeDir("ArrowDown");
+        } else if (event.code == "ArrowRight") {
+          changeDir("ArrowRight");
+        } else if (event.code == "ArrowLeft") {
+          changeDir("ArrowLeft");
+        }
+      });
+
+      function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+      }
+
+      function changeDirection(newDirection) {
+        direction = newDirection;
+      }
+
+      function draw() {
+        playerEl.style.top = `${playerY}px`;
+        playerEl.style.left = `${playerX}px`;
+
+        starEl.style.top = `${starY}px`;
+        starEl.style.left = `${starX}px`;
+
+        if (playerX == starX && playerY == starY) {
+          score++;
+          document.getElementById("score").textContent = score;
+
+          starX = getRandomInt(25) * 10;
+          starY = getRandomInt(20) * 10;
+          draw();
+        }
+      }
+
+      function gameLoop() {
+        if (direction == "ArrowRight") {
+          moveRight();
+        } else if (direction == "ArrowLeft") {
+          moveLeft();
+        } else if (direction == "ArrowUp") {
+          moveUp();
+        } else if (direction == "ArrowDown") {
+          moveDown();
+        }
+      }
+      function changeDirection() {
+        direction = "right";
+      }
+
+      let speed = 250;
+
+      function changeDir(newDir) {
+        direction = newDir;
+      }
+      setInterval(gameLoop, speed);
+    </script>
+  </body>
+</html>
